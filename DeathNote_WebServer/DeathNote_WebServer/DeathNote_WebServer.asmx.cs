@@ -1,0 +1,499 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.IO;
+using System.Linq;
+using System.Web;
+using System.Web.Services;
+
+namespace DeathNote_WebServer
+{
+    /// <summary>
+    /// Summary description for DeathNote_WebServer
+    /// </summary>
+    [WebService(Namespace = "http://tempuri.org/")]
+    [WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
+    [System.ComponentModel.ToolboxItem(false)]
+    // To allow this Web Service to be called from script, using ASP.NET AJAX, uncomment the following line. 
+    // [System.Web.Script.Services.ScriptService]
+    public class DeathNote_WebServer : System.Web.Services.WebService
+    {
+
+        SqlConnection sqlConn;
+        WebServer_ExstraMethods Create = new WebServer_ExstraMethods();
+
+        private bool OpenDatabase()
+        {
+
+            string FilePath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\DeathNote_Network";
+
+            sqlConn = new SqlConnection("Server = localhost; Integrated Security = SSPI; DataBase = master");
+
+            SqlCommand cmd = sqlConn.CreateCommand();
+
+            cmd.CommandText = "SELECT * FROM master.dbo.sysdatabases";
+            sqlConn.Open();
+
+            SqlDataReader SearchDataBase = cmd.ExecuteReader();
+
+            bool foundDataBase = false;
+
+            while (SearchDataBase.Read())
+            {
+                if (SearchDataBase["name"].ToString() == "DeathNote_DB" && Directory.Exists(FilePath))
+                {
+                    foundDataBase = true;
+                    break;
+
+                }
+            }
+
+            SearchDataBase.Close();
+
+
+            if (foundDataBase)
+            {
+                sqlConn = new SqlConnection("Server = localhost; Integrated Security = SSPI; Initial Catalog = DeathNote_DB ");
+                try
+                {
+                    sqlConn.Open();
+                    return true;
+
+                }
+                catch
+                {
+                    return false;
+
+                }
+            }
+            else
+            {
+                if (Create.createDatabase())
+                {
+                    sqlConn = new SqlConnection("Server = localhost; Integrated Security = SSPI; Initial Catalog = DeathNote_DB ");
+                    try
+                    {
+                        sqlConn.Open();
+                        return true;
+
+                    }
+                    catch
+                    {
+                        return false;
+
+                    }
+
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+
+
+        [WebMethod]
+        public string Register(string Email, string FirstName, string LastName, string Password)
+        {
+            if (OpenDatabase())//Check if the web server can connect to database 
+            {
+                SqlCommand cmd = sqlConn.CreateCommand();
+                cmd.CommandText = "Insert INTO UserInfo([Email],[FirstName],[LastName],[Password])" +
+                    "Values ('" + Email + "','" + FirstName + "','" + LastName + "','" + Password + "')";
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                }
+                catch (Exception e)
+                {
+                    sqlConn.Close();
+                    return null;
+                }
+
+                sqlConn.Close();
+                return Email;
+            }
+            else
+            {
+                sqlConn.Close();
+                return null;
+            }
+
+        }
+
+        [WebMethod]
+        public bool CreateActive(string Email)
+        {
+            string Name = "", surname = "";
+
+            if (OpenDatabase())
+            {
+                SqlCommand cmd = sqlConn.CreateCommand();
+
+                cmd.CommandText = "SELECT * FROM UserInfo";
+
+                SqlDataReader FindUser;
+                try
+                {
+                    FindUser = cmd.ExecuteReader();
+                }
+                catch (Exception e)
+                {
+                    sqlConn.Close();
+                    return false;
+                }
+
+                while (FindUser.Read())
+                {
+                    if (Email == FindUser["Email"].ToString())
+                    {
+                        Name = FindUser["FirstName"].ToString();
+                        surname = FindUser["LastName"].ToString();
+                        break;
+                    }
+                }
+                FindUser.Close();
+                cmd = sqlConn.CreateCommand();
+
+                cmd.CommandText = "INSERT INTO ActiveUser([Email],[Name],[Surname],[UserActive])" +
+                    "VALUES ('" + Email + "','" + Name + "','" + surname + "',1)";
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                }
+                catch (Exception e)
+                {
+                    sqlConn.Close();
+                    return false;
+                }
+                sqlConn.Close();
+                return true;
+            }
+            else
+            {
+                sqlConn.Close();
+                return false;
+            }
+
+        }
+
+        [WebMethod]
+        public bool Login(string Email, string Password)
+        {
+            if (OpenDatabase())
+            {
+                SqlCommand cmd = sqlConn.CreateCommand();
+
+                cmd.CommandText = "SELECT * FROM UserInfo";
+
+                SqlDataReader FindUser = cmd.ExecuteReader();
+                bool found = false;
+
+                while (FindUser.Read())
+                {
+                    if (Email == FindUser["Email"].ToString() && Password == FindUser["Password"].ToString())
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+                FindUser.Close();
+
+                cmd = sqlConn.CreateCommand();
+                cmd.CommandText = "SELECT * FROM ActiveUser";
+
+
+                if (found)
+                {
+                    cmd = sqlConn.CreateCommand();
+                    cmd.CommandText = "SELECT * FROM ActiveUser";
+                    SqlDataReader activeUser = cmd.ExecuteReader();
+
+                    while (activeUser.Read())
+                    {
+                        if (Email == activeUser["Email"].ToString())
+                        {
+
+                            cmd = sqlConn.CreateCommand();
+                            cmd.CommandText = "UPDATE ActiveUser " +
+                                "SET [UserActive] = 1" +
+                                "WHERE [Email] = '" + Email + "'";
+                            activeUser.Close();
+
+                            try
+                            {
+                                cmd.ExecuteNonQuery();
+                                sqlConn.Close();
+                                return true;
+                            }
+                            catch (Exception e)
+                            {
+                                sqlConn.Close();
+                                return false;
+                            }
+                        }
+                        else
+                        {
+                            sqlConn.Close();
+                            return CreateActive(Email);
+                        }
+                    }
+
+                }
+                else
+                {
+                    sqlConn.Close();
+                    return false;
+                }
+
+            }
+            else
+            {
+                sqlConn.Close();
+                return false;
+            }
+            return true;
+        }
+
+        [WebMethod]
+        public bool LogOut(string Email)
+        {
+            if (OpenDatabase())
+            {
+                SqlCommand cmd = sqlConn.CreateCommand();
+
+                cmd = sqlConn.CreateCommand();
+                cmd.CommandText = "SELECT * FROM ActiveUser";
+
+                cmd = sqlConn.CreateCommand();
+                cmd.CommandText = "SELECT * FROM ActiveUser";
+                SqlDataReader activeUser = cmd.ExecuteReader();
+
+                while (activeUser.Read())
+                {
+                    if (Email == activeUser["Email"].ToString())
+                    {
+                        cmd = sqlConn.CreateCommand();
+                        cmd.CommandText = "UPDATE ActiveUser " +
+                            "SET [UserActive] = 0" +
+                            "WHERE [Email] = '" + Email + "'";
+                        activeUser.Close();
+
+                        try
+                        {
+                            cmd.ExecuteNonQuery();
+                            sqlConn.Close();
+                            return true;
+                        }
+                        catch (Exception e)
+                        {
+                            sqlConn.Close();
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        sqlConn.Close();
+                        return CreateActive(Email);
+                    }
+                }
+            }
+            else
+            {
+                sqlConn.Close();
+                return false;
+            }
+            return true;
+        }
+
+        [WebMethod]
+        public DataSet Friends(string Email)
+        {
+            if (OpenDatabase())
+            {
+                SqlCommand cmd = sqlConn.CreateCommand();
+
+                cmd.CommandText = "SELECT ActiveUser.Name, ActiveUser.Surname, ActiveUser.UserActive From ActiveUser, UserFriend WHERE (ActiveUser.Email = UserFriend.EmailI OR ActiveUser.Email = UserFriend.EmailI) AND" +
+                    " (UserFriend.EmailI = '" + Email + "' OR UserFriend.EmailII = '" + Email + "')";
+
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                    SqlDataAdapter findFriends = new SqlDataAdapter(cmd);
+                    DataSet ds = new DataSet();
+
+                    findFriends.Fill(ds);
+
+                    sqlConn.Close();
+
+                    return ds;
+                }
+                catch (Exception e)
+                {
+                    sqlConn.Close();
+                    return null;
+                }
+
+            }
+            else
+            {
+                sqlConn.Close();
+                return null;
+            }
+
+        }
+
+        [WebMethod]
+        public DataSet FriendRequest(string Email)
+        {
+            if (OpenDatabase())
+            {
+                SqlCommand cmd = sqlConn.CreateCommand();
+
+                cmd.CommandText = "SELECT ActiveUser.Name, ActiveUser.Surname From ActiveUser, UserRequest WHERE (ActiveUser.Email = UserRequest.EmailFrom) AND" +
+                    "(UserRequest.EmailTo = '" + Email + "')";
+
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                    SqlDataAdapter findFriends = new SqlDataAdapter(cmd);
+                    DataSet ds = new DataSet();
+
+                    findFriends.Fill(ds);
+
+                    sqlConn.Close();
+
+                    return ds;
+                }
+                catch (Exception e)
+                {
+                    sqlConn.Close();
+                    return null;
+                }
+            }
+            else
+            {
+                sqlConn.Close();
+                return null;
+            }
+        }
+
+        [WebMethod]
+        public bool AcceptOrDecline(bool Accept, string Email, string EmailFrom)
+        {
+            if (OpenDatabase())
+            {
+                if (Accept)
+                {
+                    SqlCommand cmd = sqlConn.CreateCommand();
+                    cmd.CommandText = "INSERT INTO UserFriends([EmailI],[EamilII],)" +
+                        "VALUE ('" + Email + "','" + EmailFrom + "')";
+
+                    try
+                    {
+                        cmd.ExecuteNonQuery();
+                        sqlConn.Close();
+                        return true;
+                    }
+                    catch (Exception e)
+                    {
+                        sqlConn.Close();
+                        return false;
+                    }
+
+                }
+                else
+                {
+                    SqlCommand cmd = sqlConn.CreateCommand();
+                    cmd.CommandText = "UPDATE UserRequest " +
+                        "SET FriendDecline = 1" +
+                        "WHERE EmailFrom = '" + EmailFrom + "' And EmailTo = '" + Email + "'";
+
+                    try
+                    {
+                        cmd.ExecuteNonQuery();
+                        sqlConn.Close();
+                        return true;
+                    }
+                    catch (Exception)
+                    {
+                        sqlConn.Close();
+                        return false;
+                    }
+
+                }
+
+            }
+            else
+            {
+                sqlConn.Close();
+                return false;
+            }
+        }
+
+        [WebMethod]
+        public DataSet Users()
+        {
+            if (OpenDatabase())
+            {
+                SqlCommand cmd = sqlConn.CreateCommand();
+
+                cmd.CommandText = "SELECT Email, FirstName, LastName FROM UserInfo";
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                    SqlDataAdapter user = new SqlDataAdapter(cmd);
+                    DataSet ds = new DataSet();
+
+                    user.Fill(ds);
+
+                    sqlConn.Close();
+
+                    return ds;
+                }
+                catch (Exception e)
+                {
+                    sqlConn.Close();
+                    return null;
+                }
+
+            }
+            else
+            {
+                sqlConn.Close();
+                return null;
+            }
+        }
+
+        [WebMethod]
+        public bool CreatRequest(string Email, string EmailTo)
+        {
+            if (OpenDatabase())
+            {
+                SqlCommand cmd = sqlConn.CreateCommand();
+
+                cmd.CommandText = "INSERT INTO UserRequest([EmailTo],[EmailFrom],[FriendDecline])" +
+                    "VALUES ('" + EmailTo + "','" + Email + "',0)";
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                    sqlConn.Close();
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    sqlConn.Close();
+                    return false;
+                }
+
+            }
+
+            else
+            {
+                sqlConn.Close();
+                return false;
+            }
+        }
+    }
+}
