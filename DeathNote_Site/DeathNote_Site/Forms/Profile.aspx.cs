@@ -14,6 +14,12 @@ namespace DeathNote_Site.Forms
     {
         DeathNote_WebServerSoapClient DeathNote_ = new DeathNote_WebServerSoapClient();
         string FirstName = "", LastName = "", Email = "";
+
+        protected void btnChangePass_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("~/Forms/ChangePassword.aspx", true);
+        }
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)

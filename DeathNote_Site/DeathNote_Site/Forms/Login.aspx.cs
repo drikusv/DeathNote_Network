@@ -21,7 +21,13 @@ namespace DeathNote_Site.Forms
                 if (reqCookies != null)
                 {
                     tbxEmail.Text = reqCookies["Email"].ToString();
-                    
+                    string schecked = reqCookies["Remember"].ToString();
+
+                    if(schecked == "true")
+                    {
+                        cbxRemember.Checked = true;
+                    }
+
                 }
 
             }
@@ -37,20 +43,33 @@ namespace DeathNote_Site.Forms
             if (DeathNote_.Login(Email, Pass))
             {
 
-                if (cbxRemember.Checked)
+                if (DeathNote_.ChageActive(true, Email))
                 {
-                    HttpCookie userInfo = new HttpCookie("userInfo");
-                    userInfo["Email"] = Email;
-                    Response.Cookies.Add(userInfo);
-                    Session["Email"] = Email;
+                    if (cbxRemember.Checked)
+                    {
+                        HttpCookie userInfo = new HttpCookie("userInfo");
+                        userInfo["Email"] = Email;
+                        userInfo["Remember"] = "true";
+                        Response.Cookies.Add(userInfo);
+                        Session["Email"] = Email;
 
+
+                    }
+                    else
+                    {
+                        Session["Email"] = Email;
+                    }
+                    Response.Redirect("~/Forms/Profile.aspx", true);
 
                 }
                 else
                 {
-                    Session["Email"] = Email;
+                    lblWarrning.Text = "Could not change active form";
+                    lblWarrning.Visible = true;
+
                 }
-                Response.Redirect("~/Forms/Profile.aspx", true);
+
+              
 
 
             }

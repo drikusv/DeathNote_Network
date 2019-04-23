@@ -11,10 +11,10 @@
             height: 643px;
         }
         .auto-style2 {
-            width: 422px;
+            width: 470px;
         }
         .auto-style3 {
-            width: 422px;
+            width: 470px;
             text-align: center;
         }
         .auto-style4 {
@@ -29,9 +29,16 @@
             text-align: center;
         }
         .auto-style8 {
-            width: 422px;
+            width: 470px;
             text-align: center;
             height: 87px;
+        }
+        .auto-style10 {
+            font-size: xx-large;
+        }
+        .auto-style11 {
+            text-align: center;
+            height: 72px;
         }
     </style>
 </head>
@@ -44,7 +51,9 @@
 
             <table class="auto-style1" style="background-color: #999999">
                 <tr>
-                    <td colspan="2">&nbsp;</td>
+                    <td colspan="2" class="auto-style11">
+                        <asp:Label ID="Label6" runat="server" CssClass="auto-style10" Text="Regester"></asp:Label>
+                    </td>
                     
                 </tr>
                 <tr>
@@ -84,7 +93,7 @@
                         <asp:Label ID="Label4" runat="server" CssClass="auto-style5" Text="Password :"></asp:Label>
                     </td>
                     <td>
-                        <asp:TextBox ID="tbxPassword" runat="server" CssClass="auto-style5" Width="310px"></asp:TextBox>
+                        <asp:TextBox ID="tbxPassword" runat="server" CssClass="auto-style5" Width="310px" TextMode="Password"></asp:TextBox>
                     </td>
                     
                 </tr>
@@ -93,7 +102,7 @@
                         <asp:Label ID="Label5" runat="server" CssClass="auto-style5" Text="Comfirm Password :"></asp:Label>
                      </td>
                     <td>
-                        <asp:TextBox ID="tbxComfirmPassword" runat="server" CssClass="auto-style5" Width="310px"></asp:TextBox>
+                        <asp:TextBox ID="tbxComfirmPassword" runat="server" CssClass="auto-style5" Width="310px" TextMode="Password"></asp:TextBox>
                      </td>
                     
                 </tr>
@@ -108,7 +117,7 @@
                         <asp:Button ID="btnRegester" runat="server" CssClass="auto-style5" Height="38px" Text="Regester" Width="112px" OnClick="btnRegester_Click" />
                     </td>
                     <td class="auto-style4">
-                        <asp:Button ID="btnCancel" runat="server" CssClass="auto-style5" Height="38px" Text="Cancel" Width="112px" />
+                        <asp:Button ID="btnCancel" runat="server" CssClass="auto-style5" Height="38px" Text="Cancel" Width="112px" OnClick="btnCancel_Click" />
                     </td>
                     
                 </tr>

@@ -67,10 +67,10 @@ namespace DeathNote_Site.DeathNote_WebServer {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/Users", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        System.Data.DataSet Users();
+        System.Data.DataSet Users(string Email);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/Users", ReplyAction="*")]
-        System.Threading.Tasks.Task<System.Data.DataSet> UsersAsync();
+        System.Threading.Tasks.Task<System.Data.DataSet> UsersAsync(string Email);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/CreatRequest", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
@@ -92,6 +92,20 @@ namespace DeathNote_Site.DeathNote_WebServer {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/EditProfile", ReplyAction="*")]
         System.Threading.Tasks.Task<bool> EditProfileAsync(string FirstName, string LastName, string Email, string NewEmail);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ChagePassword", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        bool ChagePassword(string OldPassword, string NewPassword);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ChagePassword", ReplyAction="*")]
+        System.Threading.Tasks.Task<bool> ChagePasswordAsync(string OldPassword, string NewPassword);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ChageActive", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        bool ChageActive(bool Active, string Email);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ChageActive", ReplyAction="*")]
+        System.Threading.Tasks.Task<bool> ChageActiveAsync(bool Active, string Email);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -177,12 +191,12 @@ namespace DeathNote_Site.DeathNote_WebServer {
             return base.Channel.AcceptOrDeclineAsync(Accept, Email, EmailFrom);
         }
         
-        public System.Data.DataSet Users() {
-            return base.Channel.Users();
+        public System.Data.DataSet Users(string Email) {
+            return base.Channel.Users(Email);
         }
         
-        public System.Threading.Tasks.Task<System.Data.DataSet> UsersAsync() {
-            return base.Channel.UsersAsync();
+        public System.Threading.Tasks.Task<System.Data.DataSet> UsersAsync(string Email) {
+            return base.Channel.UsersAsync(Email);
         }
         
         public bool CreatRequest(string Email, string EmailTo) {
@@ -207,6 +221,22 @@ namespace DeathNote_Site.DeathNote_WebServer {
         
         public System.Threading.Tasks.Task<bool> EditProfileAsync(string FirstName, string LastName, string Email, string NewEmail) {
             return base.Channel.EditProfileAsync(FirstName, LastName, Email, NewEmail);
+        }
+        
+        public bool ChagePassword(string OldPassword, string NewPassword) {
+            return base.Channel.ChagePassword(OldPassword, NewPassword);
+        }
+        
+        public System.Threading.Tasks.Task<bool> ChagePasswordAsync(string OldPassword, string NewPassword) {
+            return base.Channel.ChagePasswordAsync(OldPassword, NewPassword);
+        }
+        
+        public bool ChageActive(bool Active, string Email) {
+            return base.Channel.ChageActive(Active, Email);
+        }
+        
+        public System.Threading.Tasks.Task<bool> ChageActiveAsync(bool Active, string Email) {
+            return base.Channel.ChageActiveAsync(Active, Email);
         }
     }
 }

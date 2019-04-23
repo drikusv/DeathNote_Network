@@ -121,7 +121,11 @@
         </s:complexType>
       </s:element>
       <s:element name="Users">
-        <s:complexType />
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Email" type="s:string" />
+          </s:sequence>
+        </s:complexType>
       </s:element>
       <s:element name="UsersResponse">
         <s:complexType>
@@ -187,6 +191,36 @@
         <s:complexType>
           <s:sequence>
             <s:element minOccurs="1" maxOccurs="1" name="EditProfileResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ChagePassword">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="OldPassword" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="NewPassword" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ChagePasswordResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="ChagePasswordResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ChageActive">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="Active" type="s:boolean" />
+            <s:element minOccurs="0" maxOccurs="1" name="Email" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ChageActiveResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="ChageActiveResult" type="s:boolean" />
           </s:sequence>
         </s:complexType>
       </s:element>
@@ -258,6 +292,18 @@
   <wsdl:message name="EditProfileSoapOut">
     <wsdl:part name="parameters" element="tns:EditProfileResponse" />
   </wsdl:message>
+  <wsdl:message name="ChagePasswordSoapIn">
+    <wsdl:part name="parameters" element="tns:ChagePassword" />
+  </wsdl:message>
+  <wsdl:message name="ChagePasswordSoapOut">
+    <wsdl:part name="parameters" element="tns:ChagePasswordResponse" />
+  </wsdl:message>
+  <wsdl:message name="ChageActiveSoapIn">
+    <wsdl:part name="parameters" element="tns:ChageActive" />
+  </wsdl:message>
+  <wsdl:message name="ChageActiveSoapOut">
+    <wsdl:part name="parameters" element="tns:ChageActiveResponse" />
+  </wsdl:message>
   <wsdl:portType name="DeathNote_WebServerSoap">
     <wsdl:operation name="Register">
       <wsdl:input message="tns:RegisterSoapIn" />
@@ -302,6 +348,14 @@
     <wsdl:operation name="EditProfile">
       <wsdl:input message="tns:EditProfileSoapIn" />
       <wsdl:output message="tns:EditProfileSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ChagePassword">
+      <wsdl:input message="tns:ChagePasswordSoapIn" />
+      <wsdl:output message="tns:ChagePasswordSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ChageActive">
+      <wsdl:input message="tns:ChageActiveSoapIn" />
+      <wsdl:output message="tns:ChageActiveSoapOut" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="DeathNote_WebServerSoap" type="tns:DeathNote_WebServerSoap">
@@ -405,6 +459,24 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="ChagePassword">
+      <soap:operation soapAction="http://tempuri.org/ChagePassword" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ChageActive">
+      <soap:operation soapAction="http://tempuri.org/ChageActive" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
   </wsdl:binding>
   <wsdl:binding name="DeathNote_WebServerSoap12" type="tns:DeathNote_WebServerSoap">
     <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
@@ -500,6 +572,24 @@
     </wsdl:operation>
     <wsdl:operation name="EditProfile">
       <soap12:operation soapAction="http://tempuri.org/EditProfile" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ChagePassword">
+      <soap12:operation soapAction="http://tempuri.org/ChagePassword" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ChageActive">
+      <soap12:operation soapAction="http://tempuri.org/ChageActive" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>

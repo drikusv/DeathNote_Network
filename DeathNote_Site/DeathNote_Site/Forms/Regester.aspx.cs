@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using DeathNote_Site.DeathNote_WebServer;
+using DeathNote_Site.Class;
 
 namespace DeathNote_Site.Forms
 {
@@ -21,24 +22,26 @@ namespace DeathNote_Site.Forms
 
         protected void btnRegester_Click(object sender, EventArgs e)
         {
+            Encryption encrypt = new Encryption();
             string Name = tbxFirstName.Text;
             string Surname = tbxLastName.Text;
             string Email = tbxEmail.Text;
-            string Pass = tbxPassword.Text;
-            string ComPass = tbxComfirmPassword.Text;
+            string Pass = encrypt.Encrypt(tbxPassword.Text);
+            string ComPass = encrypt.Encrypt(tbxComfirmPassword.Text);
 
             if(Pass == ComPass)
             {
-                if ((Email = DeathNote_.Register(Email, Name, Surname, Pass)) != null)
-                {
-                    Session["Email"] = Email;
+                //if ((Email = DeathNote_.Register(Email, Name, Surname, Pass)) != null)
+                //{
+                //    Session["Email"] = Email;
 
-                    Response.Redirect("~/Forms/Profile.aspx", true);
-                }
-                else
-                {
-                    lblFail.Text = "Failed to create a user";
-                }
+                //    Response.Redirect("~/Forms/Profile.aspx", true);
+                //}
+                //else
+                //{
+                //    lblFail.Text = "Failed to create a user";
+                //}
+                lblFail.Text = Pass;
 
 
             }
@@ -47,6 +50,11 @@ namespace DeathNote_Site.Forms
                 lblFail.Text = "The passwords does not match";
             }
            
+        }
+
+        protected void btnCancel_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("~/Forms/Login.aspx", true);
         }
     }
 }

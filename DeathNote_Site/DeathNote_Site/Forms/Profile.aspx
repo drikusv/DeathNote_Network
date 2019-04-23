@@ -40,8 +40,11 @@
             height: 87px;
         }
         .auto-style10 {
-            width: 69%;
+            width: 51%;
             height: 231px;
+        }
+        .auto-style11 {
+            font-size: medium;
         }
     </style>
 </head>
@@ -69,7 +72,7 @@
                         <asp:Label ID="Label1" runat="server" CssClass="auto-style5" Text="First Name :"></asp:Label>
                     </td>
                     <td>
-                        <asp:TextBox ID="tbxFirstName" runat="server" CssClass="auto-style5" ReadOnly="True" Width="310px"></asp:TextBox>
+                        <asp:TextBox ID="tbxFirstName" runat="server" CssClass="auto-style11" ReadOnly="True" Width="310px" Height="42px"></asp:TextBox>
                     </td>
                     
                 </tr>
@@ -78,7 +81,7 @@
                         <asp:Label ID="Label2" runat="server" CssClass="auto-style5" Text="Last Name :"></asp:Label>
                      </td>
                     <td>
-                        <asp:TextBox ID="tbxLastName" runat="server" CssClass="auto-style5" ReadOnly="True" Width="310px"></asp:TextBox>
+                        <asp:TextBox ID="tbxLastName" runat="server" CssClass="auto-style11" ReadOnly="True" Width="310px" Height="41px"></asp:TextBox>
                      </td>
                     
                 </tr>
@@ -87,7 +90,7 @@
                         <asp:Label ID="Label3" runat="server" CssClass="auto-style5" Text="Email :"></asp:Label>
                     </td>
                     <td>
-                        <asp:TextBox ID="tbxEmail" runat="server" CssClass="auto-style5" ReadOnly="True" Width="310px"></asp:TextBox>
+                        <asp:TextBox ID="tbxEmail" runat="server" CssClass="auto-style11" ReadOnly="True" Width="310px" Height="32px"></asp:TextBox>
                     </td>
                     
                 </tr>
@@ -103,7 +106,7 @@
                         <asp:Button ID="btnEdit" runat="server" CssClass="auto-style5" Height="38px" Text="Edit" Width="112px" OnClick="btnEdit_Click" />
                     </td>
                     <td class="auto-style4">
-                        <asp:Button ID="btnChangePass" runat="server" CssClass="auto-style5" Height="38px" Text="Change Password" Width="146px" />
+                        <asp:Button ID="btnChangePass" runat="server" CssClass="auto-style5" Height="38px" Text="Change Password" Width="146px" OnClick="btnChangePass_Click" />
                     </td>
                     
                 </tr>

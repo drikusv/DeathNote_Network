@@ -7,6 +7,8 @@
 
     <title>Login</title>
 
+    <script type="text/javascript" src="../Scripts/LoginScript.js"></script>
+
     <style type="text/css">
         .auto-style1 {
             width: 49%;

@@ -451,14 +451,20 @@ namespace DeathNote_WebServer
         }
 
         [WebMethod]
-        public DataSet Users()
+        public DataSet Users(string Email)
         {
             if (OpenDatabase())
             {
                 SqlCommand cmd = sqlConn.CreateCommand();
 
-                cmd.CommandText = "SELECT Email, FirstName, LastName FROM UserInfo,UserFriend,UserRequest " +
-                    "WHERE (Email != UserFriend.EmailI AND Email != UserFriend.EmailI) AND (Email != UserRequest.EmailTo AND Email != UserRequest.EmailFrom)";
+                cmd.CommandText = "select * from UserInfo" +
+                    "where" +
+                    "Not((Email in (select EmailI from UserFriend WHERE EmailII = '"+Email+"'))"+
+                    " or (Email in (select EmailII from UserFriend WHERE EmailI = '" + Email + "')))" +
+                    "AND" +
+                    "Not((Email in (select EmailTO from UserRequest WHERE EmailFrom = '" + Email + "'))" +
+                    " or (Email in (select EmailFrom from UserRequest WHERE EmailTO = '" + Email + "')))" +
+                    "And Not(Email = '" + Email + "')";
                 try
                 {
                     cmd.ExecuteNonQuery();
@@ -492,20 +498,71 @@ namespace DeathNote_WebServer
             {
                 SqlCommand cmd = sqlConn.CreateCommand();
 
-                cmd.CommandText = "INSERT INTO UserRequest([EmailTo],[EmailFrom],[FriendDecline])" +
-                    "VALUES ('" + EmailTo + "','" + Email + "',0)";
+                cmd.CommandText = "SELECT * FROM UserRequest WHERE ([EmailTO] = '" + EmailTo + "' AND [EmailFrom] = '" + Email + "' AND FriendDecline = 1)" +
+                    "([EmailTO] = '" + EmailTo + "' AND [EmailFrom] = '" + Email + "' AND FriendDecline = 1)";
+
                 try
                 {
-                    cmd.ExecuteNonQuery();
-                    sqlConn.Close();
-                    return true;
+                    SqlDataReader read = cmd.ExecuteReader();
+                    while (read.Read())
+                    {
+                        if(Email == read["EmailFrom"].ToString() && EmailTo == read["EmailTo"].ToString() && read["FriendDecline"].ToString() == "0")
+                        {
+                            return true;
+                        }
+                        else if (Email == read["EmailFrom"].ToString() && EmailTo == read["EmailTo"].ToString() && read["FriendDecline"].ToString() == "1")
+                        {
+                            cmd = sqlConn.CreateCommand();
+
+                            cmd.CommandText = "UPDATE UserRequest" +
+                                "SET FriendDecline = 0" +
+                                "WHERE [EmailTO] = '" + EmailTo + "' AND [EmailFrom] = '" + Email + "'";
+
+                            try
+                            {
+                                cmd.ExecuteNonQuery();
+                                sqlConn.Close();
+                               
+                            }
+                            catch (Exception e)
+                            {
+                                sqlConn.Close();
+                                return false;
+                            }
+
+                            return true;
+
+                        }
+                        else
+                        {
+                            cmd = sqlConn.CreateCommand();
+
+                            cmd.CommandText = "INSERT INTO UserRequest([EmailTo],[EmailFrom],[FriendDecline])" +
+                                "VALUES ('" + EmailTo + "','" + Email + "',0)";
+
+                            try
+                            {
+                                cmd.ExecuteNonQuery();
+                                sqlConn.Close();
+                                
+                            }
+                            catch (Exception e)
+                            {
+                                sqlConn.Close();
+                                return false;
+                            }
+
+                            return true;
+
+                        }
+                    }
                 }
                 catch (Exception e)
                 {
                     sqlConn.Close();
                     return false;
                 }
-
+                return true;
             }
 
             else
@@ -590,6 +647,79 @@ namespace DeathNote_WebServer
                 }
 
                
+            }
+            else
+            {
+                sqlConn.Close();
+                return false;
+            }
+        }
+
+        [WebMethod]
+        public bool ChagePassword(string OldPassword, string NewPassword)
+        {
+            if (OpenDatabase())
+            {
+                SqlCommand cmd = sqlConn.CreateCommand();
+
+                cmd.CommandText = "Update UserInfo" +
+                    "SET Password = '"+NewPassword+"'" +
+                    "WHERE Password = '"+OldPassword+"'";
+
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                    sqlConn.Close();
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    sqlConn.Close();
+                    return false;
+                }
+            }
+            else
+            {
+                sqlConn.Close();
+                return false;
+            }
+        }
+
+        [WebMethod]
+        public bool ChageActive(bool Active,string Email)
+        {
+            if (OpenDatabase())
+            {
+                SqlCommand cmd = sqlConn.CreateCommand();
+
+                if (Active)
+                {
+                    cmd.CommandText = "UPDATE ActiveUser " +
+                        "SET UserActive = 1" +
+                        "WHERE Email = '"+Email+"'";
+                    
+                    
+                }
+                else
+                {
+                    cmd.CommandText = "UPDATE ActiveUser " +
+                        "SET UserActive = 0" +
+                        "WHERE Email = '" + Email + "'";
+                   
+                    
+                }
+
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                    sqlConn.Close();
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    return false;
+
+                }
             }
             else
             {

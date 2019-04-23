@@ -76,6 +76,7 @@
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
+    <Content Include="Forms\ChangePassword.aspx" />
     <Content Include="Forms\FriendRequest.aspx" />
     <Content Include="Forms\Friends.aspx" />
     <Content Include="Forms\Login.aspx">
@@ -83,6 +84,7 @@
     </Content>
     <Content Include="Forms\Profile.aspx" />
     <Content Include="Forms\Regester.aspx" />
+    <Content Include="Scripts\LoginScript.js" />
     <Content Include="UserControl\Menu.ascx" />
     <Content Include="Web.config" />
     <None Include="Connected Services\DeathNote_WebServer\DeathNote_WebServer.wsdl" />
@@ -94,6 +96,13 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ChangePassword.aspx.cs">
+      <DependentUpon>ChangePassword.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Forms\ChangePassword.aspx.designer.cs">
+      <DependentUpon>ChangePassword.aspx</DependentUpon>
     </Compile>
     <Compile Include="Forms\FriendRequest.aspx.cs">
       <DependentUpon>FriendRequest.aspx</DependentUpon>

@@ -49,7 +49,7 @@ namespace DeathNote_Site.Forms
         {
             DataSet ds = new DataSet();
 
-            ds = DeathNote_.Users();
+            ds = DeathNote_.Users(Session["Email"].ToString());
 
             dlistUsers.DataSource = ds;
             dlistUsers.DataBind();
