@@ -101,7 +101,7 @@
                         <asp:Button ID="btnLogin" CssClass="button" runat="server" Text="Login" OnClick="btnLogin_Click" />
                     </td>
                     <td class="auto-style8">
-                        <asp:Button ID="btnRegester" CssClass="button" runat="server" Text="Regester" OnClick="btnRegester_Click" CausesValidation="False" />
+                        <asp:Button ID="btnRegester" CssClass="button" runat="server" Text="Register" OnClick="btnRegester_Click" CausesValidation="False" />
                     </td>
                    
                 </tr>

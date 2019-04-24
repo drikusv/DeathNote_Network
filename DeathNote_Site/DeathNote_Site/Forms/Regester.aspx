@@ -127,7 +127,7 @@
                 </tr>
                 <tr>
                     <td class="auto-style8">
-                        <asp:Button ID="btnRegester" runat="server" CssClass="button" Height="38px" Text="Regester" Width="112px" OnClick="btnRegester_Click" />
+                        <asp:Button ID="btnRegester" runat="server" CssClass="button" Height="38px" Text="Register" Width="112px" OnClick="btnRegester_Click" />
                     </td>
                     <td class="auto-style4">
                         <asp:Button ID="btnCancel" runat="server" CssClass="button" Height="38px" Text="Cancel" Width="112px" OnClick="btnCancel_Click" CausesValidation="False" />
