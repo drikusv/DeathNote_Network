@@ -29,27 +29,25 @@ namespace DeathNote_Site.Forms
             string Pass = encrypt.Encrypt(tbxPassword.Text);
             string ComPass = encrypt.Encrypt(tbxComfirmPassword.Text);
 
-            if(Pass == ComPass)
+            if (Page.IsValid)
             {
-                //if ((Email = DeathNote_.Register(Email, Name, Surname, Pass)) != null)
-                //{
-                //    Session["Email"] = Email;
+                try
+                {
+                    if ((Email = DeathNote_.Register(Email, Name, Surname, Pass)) != null)
+                    {
+                        Session["Email"] = Email;
 
-                //    Response.Redirect("~/Forms/Profile.aspx", true);
-                //}
-                //else
-                //{
-                //    lblFail.Text = "Failed to create a user";
-                //}
-                lblFail.Text = Pass;
+                        Response.Redirect("~/Forms/Profile.aspx", false);
+                    }
+                    
+                }
+                catch
+                {
+                    Response.Redirect("~/Forms/Error.aspx", true);
+                }
 
-
-            }
-            else
-            {
-                lblFail.Text = "The passwords does not match";
-            }
-           
+               
+            }          
         }
 
         protected void btnCancel_Click(object sender, EventArgs e)

@@ -19,8 +19,16 @@ namespace DeathNote_Site.UserControl
             {
                 DataSet ds = new DataSet();
                 DataTable dt = new DataTable();
+                try
+                {
+                    dt = DeathNote_.Profile(Session["Email"].ToString()).Tables["UserInfo"];
+                }
+                catch
+                {
+                    Response.Redirect("~/Forms/Error.aspx", true);
+                }
 
-                dt = DeathNote_.Profile(Session["Email"].ToString()).Tables["UserInfo"];
+                
 
                 foreach(DataRow dr in dt.Rows)
                 {
@@ -44,8 +52,16 @@ namespace DeathNote_Site.UserControl
 
         protected void btnLogout_Click(object sender, EventArgs e)
         {
-            Response.Redirect("~/Forms/Login.aspx", true);
-            Session.RemoveAll();
+            if (DeathNote_.LogOut(Session["Email"].ToString()))
+            {
+                Session.RemoveAll();
+                Response.Redirect("~/Forms/Login.aspx", true);
+            }
+            else
+            {
+                Response.Redirect("~/Forms/Error.aspx", true);
+            }
+            
         }
     }
 }

@@ -29,7 +29,15 @@ namespace DeathNote_Site.Forms
         {
             DataSet ds = new DataSet();
 
-            ds = DeathNote_.Friends(Session["Email"].ToString());
+            try
+            {
+                ds = DeathNote_.Friends(Session["Email"].ToString());
+            }
+            catch
+            {
+                Response.Redirect("~/Forms/Error.aspx", true);
+            }
+            
 
             dlistFriends.DataSource = ds;
             dlistFriends.DataBind();
@@ -38,8 +46,16 @@ namespace DeathNote_Site.Forms
         private void LoadRequest()
         {
             DataSet ds = new DataSet();
+            try
+            {
+                ds = DeathNote_.FriendRequest(Session["Email"].ToString());
+            }
+            catch
+            {
+                Response.Redirect("~/Forms/Error.aspx", true);
+            }
 
-            ds = DeathNote_.FriendRequest(Session["Email"].ToString());
+           
 
             dlistRequest.DataSource = ds;
             dlistRequest.DataBind();
@@ -49,7 +65,16 @@ namespace DeathNote_Site.Forms
         {
             DataSet ds = new DataSet();
 
-            ds = DeathNote_.Users(Session["Email"].ToString());
+            try
+            {
+                ds = DeathNote_.Users(Session["Email"].ToString());
+            }
+            catch
+            {
+                Response.Redirect("~/Forms/Error.aspx", true);
+            }
+
+            
 
             dlistUsers.DataSource = ds;
             dlistUsers.DataBind();
@@ -69,12 +94,20 @@ namespace DeathNote_Site.Forms
 
             string Email = Session["Email"].ToString();
             string EmailFrom = lblEmail.Text;
-
-            if (DeathNote_.AcceptOrDecline(true, Email, EmailFrom))
+            try
             {
-                LoadFriend();
-                LoadRequest();
+                if (DeathNote_.AcceptOrDecline(true, Email, EmailFrom))
+                {
+                    LoadFriend();
+                    LoadRequest();
+                }
+
             }
+            catch
+            {
+                Response.Redirect("~/Forms/Error.aspx", true);
+            }
+
             
         }
 
@@ -83,17 +116,25 @@ namespace DeathNote_Site.Forms
             var btn = (Button)sender;
 
             var item = (DataListItem)btn.NamingContainer;
-            var lblEmail = (Label)item.FindControl("lblNameR");
+            var lblEmail = (Label)item.FindControl("lblEmailR");
 
             string Email = Session["Email"].ToString();
             string EmailFrom = lblEmail.Text;
-
-            if (DeathNote_.AcceptOrDecline(false, Email, EmailFrom))
+            try
             {
-                LoadFriend();
-                LoadRequest();
-                LoadUsers();
+                if (DeathNote_.AcceptOrDecline(false, Email, EmailFrom))
+                {
+                    LoadFriend();
+                    LoadRequest();
+                    LoadUsers();
+                }
             }
+            catch
+            {
+                Response.Redirect("~/Forms/Error.aspx", true);
+            }
+
+           
         }
 
         protected void btnAdd_Click(object sender, EventArgs e)
@@ -105,14 +146,22 @@ namespace DeathNote_Site.Forms
 
             string EmailTo = lblEmail.Text;
             string Email = Session["Email"].ToString();
-
-            if (DeathNote_.CreatRequest(Email, EmailTo))
+            try
             {
-                LoadFriend();
-                LoadRequest();
-                LoadUsers();
+                if (DeathNote_.CreatRequest(Email, EmailTo))
+                {
+                    LoadFriend();
+                    LoadRequest();
+                    LoadUsers();
 
+                }
             }
+            catch
+            {
+                Response.Redirect("~/Forms/Error.aspx", true);
+            }
+
+            
         }
     }
 }

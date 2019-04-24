@@ -74,8 +74,7 @@ namespace DeathNote_WebServer
             string CreateUserRequest = "CREATE TABLE UserRequest" +
                 "( RequestID INT NOT NULL PRIMARY KEY IDENTITY,  " +
                 "EmailTO VARCHAR(30) NOT NULL FOREIGN KEY REFERENCES UserInfo(Email)," +
-                "EmailFrom VARCHAR(30) NOT NULL  FOREIGN KEY REFERENCES UserInfo(Email)," +
-                "FriendDecline BIT NOT NULL CHECK (FriendDecline in (0,1)) )";
+                "EmailFrom VARCHAR(30) NOT NULL  FOREIGN KEY REFERENCES UserInfo(Email))";
 
             string CreateUserFriend = "CREATE TABLE UserFriend" +
                 "( FreindID INT NOT NULL PRIMARY KEY IDENTITY,  " +

@@ -6,33 +6,24 @@
 <head runat="server">
 
     <title>Login</title>
-
-    <script type="text/javascript" src="../Scripts/LoginScript.js"></script>
+   
+   
+    <link type="text/css" href="../Style/Main.css" rel="stylesheet" />
+    
 
     <style type="text/css">
-        .auto-style1 {
-            width: 49%;
-            height: 487px;
-        }
         .auto-style2 {
-            width: 269px;
+            width: 319px;
         }
         .auto-style3 {
-            width: 269px;
+            width: 319px;
             text-align: center;
         }
         .auto-style4 {
             text-align: center;
         }
-        .auto-style5 {
-            width: 269px;
-            height: 52px;
-        }
-        .auto-style6 {
-            height: 52px;
-        }
         .auto-style7 {
-            width: 269px;
+            width: 319px;
             text-align: center;
             height: 73px;
         }
@@ -44,7 +35,12 @@
             font-size: medium;
         }
         .auto-style10 {
-            font-size: large;
+            width: 319px;
+            text-align: center;
+            height: 54px;
+        }
+        .auto-style11 {
+            height: 54px;
         }
     </style>
     
@@ -53,12 +49,14 @@
     <form id="frmLogin" runat="server">
         <header>
 
+            <h1 class ="LoginHeader">Welcome to DeathNote</h1>
+
         </header>
         <div>
-            <center>
-            <table class="auto-style1" style="background-color: #999999">
+            
+            <table class="Login">
                 <tr>
-                    <td colspan="2" style="text-align: center;" class="auto-style9">Login</td>
+                    <td colspan="2" style="text-align: center;" >Login</td>
                    
                 </tr>
                 <tr>
@@ -67,51 +65,48 @@
                     
                 </tr>
                 <tr>
-                    <td class="auto-style3">
-                        <asp:Label ID="Label1" runat="server" CssClass="auto-style9" Text="Email :"></asp:Label>
+                    <td class="auto-style10">
+                        <asp:Label ID="Label1" CssClass="Lable" runat="server"  Text="Email :"></asp:Label>
                     </td>
-                    <td>
-                        <asp:TextBox ID="tbxEmail" runat="server" CssClass="auto-style9" Width="247px"></asp:TextBox>
+                    <td class="auto-style11">
+                        <asp:TextBox ID="tbxEmail" runat="server" Width="247px"></asp:TextBox>
+                        <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" ControlToValidate="tbxEmail" ErrorMessage="*" ForeColor="Red" Font-Bold="True" Font-Size="18pt"></asp:RequiredFieldValidator>
                     </td>
                    
                 </tr>
                   <tr>
                     <td class="auto-style3">
-                        <asp:Label ID="Label2" runat="server" CssClass="auto-style9" Text="Password :"></asp:Label>
+                        <asp:Label ID="Label2" CssClass="Lable"  runat="server"  Text="Password :"></asp:Label>
                       </td>
                     <td>
                         <asp:TextBox ID="tbxPassword" runat="server" CssClass="auto-style9" TextMode="Password" Width="250px"></asp:TextBox>
+                        <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" ControlToValidate="tbxPassword" ErrorMessage="*" ForeColor="Red" Font-Bold="True" Font-Size="18pt"></asp:RequiredFieldValidator>
                       </td>
                    
                 </tr>
                 <tr>
                     <td colspan="2" class="auto-style4">
-                        <asp:CheckBox ID="cbxRemember" runat="server" CssClass="auto-style10" Text="Remember me next time" />
+                        <asp:CheckBox ID="cbxRemember" runat="server"  Text="Remember me next time" />
                     </td>
                     
                 </tr>
                 <tr>
                     <td colspan="2" class="auto-style4">
-                        <asp:Label ID="lblWarrning" runat="server" BorderColor="Red" CssClass="auto-style9" ForeColor="Red" Text="Label" Visible="False"></asp:Label>
+                        <asp:Label ID="lblWarrning" runat="server" CssClass="Lable" ForeColor="Red" Text="Label" Visible="False"></asp:Label>
                     </td>
                    
                 </tr>
-                 <tr>
-                    <td class="auto-style5"></td>
-                    <td class="auto-style6"></td>
-                    
-                </tr>
                 <tr>
                     <td class="auto-style7">
-                        <asp:Button ID="btnLogin" runat="server" BackColor="Silver" BorderColor="Gray" BorderStyle="Solid" CssClass="auto-style9" Height="38px" Text="Login" Width="103px" OnClick="btnLogin_Click" />
+                        <asp:Button ID="btnLogin" CssClass="button" runat="server" Text="Login" OnClick="btnLogin_Click" />
                     </td>
                     <td class="auto-style8">
-                        <asp:Button ID="btnRegester" runat="server" BackColor="Silver" BorderColor="Gray" BorderStyle="Solid" CssClass="auto-style9" Height="38px" Text="Regester" Width="103px" OnClick="btnRegester_Click" />
+                        <asp:Button ID="btnRegester" CssClass="button" runat="server" Text="Regester" OnClick="btnRegester_Click" CausesValidation="False" />
                     </td>
                    
                 </tr>
             </table>
-            </center>
+            
 
         </div>
         <footer>
@@ -120,3 +115,6 @@
     </form>
 </body>
 </html>
+
+<%--<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
+<script type="text/javascript" src="../Scripts/LoginScript.js"></script>--%>

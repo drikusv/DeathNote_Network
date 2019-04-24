@@ -6,6 +6,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using DeathNote_Site.DeathNote_WebServer;
 using DeathNote_Site.Class;
+using DeathNote_Site.Forms;
 
 namespace DeathNote_Site.Forms
 {
@@ -31,6 +32,7 @@ namespace DeathNote_Site.Forms
                 }
 
             }
+            
         }
 
         protected void btnLogin_Click(object sender, EventArgs e)
@@ -39,50 +41,75 @@ namespace DeathNote_Site.Forms
 
             string Email = tbxEmail.Text;
             string Pass = encrypt.Encrypt(tbxPassword.Text);
-           
-            if (DeathNote_.Login(Email, Pass))
+
+            if (Page.IsValid)
             {
-
-                if (DeathNote_.ChageActive(true, Email))
+                try
                 {
-                    if (cbxRemember.Checked)
+                    if (DeathNote_.Login(Email, Pass))
                     {
-                        HttpCookie userInfo = new HttpCookie("userInfo");
-                        userInfo["Email"] = Email;
-                        userInfo["Remember"] = "true";
-                        Response.Cookies.Add(userInfo);
-                        Session["Email"] = Email;
+
+                        if (DeathNote_.ChageActive(true, Email))
+                        {
+                            if (cbxRemember.Checked)
+                            {
+                                HttpCookie userInfo = new HttpCookie("userInfo");
+                                userInfo["Email"] = Email;
+                                userInfo["Remember"] = "true";
+                                Response.Cookies.Add(userInfo);
+                                Session["Email"] = Email;
 
 
+                            }
+                            else
+                            {
+                                HttpCookie reqCookies = Request.Cookies["userInfo"];
+                                if (reqCookies != null)
+                                {
+                                    reqCookies["Email"] = null;
+                                    reqCookies["Remember"] = null;
+                                    Response.Cookies.Add(reqCookies);
+
+                                }
+                                Session["Email"] = Email;
+                            }
+                            Response.Redirect("~/Forms/Profile.aspx", false);
+
+                        }
+                        else
+                        {
+                            lblWarrning.Text = "Could not change active form";
+                            lblWarrning.Visible = true;
+
+                        }
                     }
                     else
                     {
-                        Session["Email"] = Email;
+                        lblWarrning.Text = "Email Or Password is incorect";
+                        lblWarrning.Visible = true;
                     }
-                    Response.Redirect("~/Forms/Profile.aspx", true);
 
                 }
-                else
+                catch(Exception pro)
                 {
-                    lblWarrning.Text = "Could not change active form";
-                    lblWarrning.Visible = true;
-
+                    Response.Redirect("~/Forms/Error.aspx", true);
                 }
-
-              
-
+                
 
             }
             else
             {
-                lblWarrning.Text = "Email Or Password is incorect";
+                lblWarrning.Text = "Check the required fields not filled in";
                 lblWarrning.Visible = true;
             }
+           
+            
         }
 
         protected void btnRegester_Click(object sender, EventArgs e)
         {
             Response.Redirect("~/Forms/Regester.aspx", true);
+
         }
     }
 }

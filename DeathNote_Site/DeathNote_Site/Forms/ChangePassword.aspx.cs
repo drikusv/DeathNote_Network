@@ -24,24 +24,22 @@ namespace DeathNote_Site.Forms
             string Newpassword = encrypt.Encrypt(tbxNewPassword.Text);
             string ComNewPassword = encrypt.Encrypt(tbxCNewPassword.Text);
 
-            if(Newpassword == ComNewPassword)
+            try
             {
                 if (DeathNote_.ChagePassword(CurrentPass, Newpassword))
                 {
-                    Response.Redirect("~/Forms/Profile.aspx", true);
+                    Response.Redirect("~/Forms/Profile.aspx", false);
                 }
-                else
-                {
-                    lblFail.Text = "Could not update your password there is problem to connect to the Database";
-                    lblFail.Visible = true;
-                }
+                
+              
             }
-            else
+            catch
             {
-                lblFail.Text = "The new password and comfirmed password does not match";
-                lblFail.Visible = true;
-
+                Response.Redirect("~/Forms/Error.aspx", true);
             }
+
+                
+          
             
         }
     }
