@@ -5,7 +5,7 @@ Social Network
 1. Make Sure you can run sql server.
 2. open the DeathNote_WebServer.snl.
 3. Open solution explorer.
-4. Right click on DeathNote_WebServer under the solution go to propeties.
+4. Right click on DeathNote_WebServer under the solution go to properties.
 5. Go to web inside properties.
 6. Make sure Specific page is selected inside text box must be "DeathNote_WebServer.asmx".
 7. Then run the web server.
